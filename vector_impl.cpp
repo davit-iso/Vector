@@ -34,9 +34,13 @@ int Vector::at(size_t index) const
 
 void Vector::push_back(int value)
 {
+    if(m_capacity == 0)
+    {
+        reallocate(1);
+    }
     if(m_size == m_capacity)
     {
-        reallocate(2*(m_size));
+        reallocate(2*(m_capacity));
     }
     m_data[m_size] = value;
     ++m_size;
@@ -92,7 +96,7 @@ void Vector::shrink_to_fit()
     {
         return;
     }
-    reallocate(m_size);
+    reallocate(m_capacity);
 }
 
 void Vector::insert(size_t index, int value)
@@ -103,18 +107,19 @@ void Vector::insert(size_t index, int value)
     }
     if(m_size == m_capacity)
     {
-        reallocate(2*m_size);
+        reallocate(2*m_capacity);
     }
     if(index == m_size)
     {
         push_back(value);
         return;
     }
-    for(int i=m_size-1; i > index; --i)
+    for(int i = m_size; i > index; --i)
     {
         m_data[i]=m_data[i-1];
     }
     m_data[index]=value;
+    ++m_size;
 }
 
 void Vector::erase(size_t index)
